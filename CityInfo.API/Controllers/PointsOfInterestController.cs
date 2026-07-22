@@ -21,7 +21,7 @@ namespace CityInfo.API.Controllers
             return Ok(city.PointsOfInterest);
         }
 
-        [HttpGet("{pointofinterestid}")]
+        [HttpGet("{pointofinterestid}", Name = "GetPointOfInterest")]
         public ActionResult<PointOfInterestDto> GetPointOfInterest(
             int cityId, int pointOfInterestId)
         {
@@ -48,6 +48,7 @@ namespace CityInfo.API.Controllers
            int cityId,
            PointOfInterestForCreationDto pointOfInterest)
         {
+            // Check that we are not trying to add a point of interest to a non-existant city
             var city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
             if (city == null)
             {
@@ -55,6 +56,7 @@ namespace CityInfo.API.Controllers
             }
 
             // demo purposes - to be improved
+            // Calculate the hightest id of all points of interest and add 1 to it
             var maxPointOfInterestId = CitiesDataStore.Current.Cities.SelectMany(
                              c => c.PointsOfInterest).Max(p => p.Id);
 
@@ -65,8 +67,11 @@ namespace CityInfo.API.Controllers
                 Description = pointOfInterest.Description
             };
 
+            // Add the new point of interst to the city
             city.PointsOfInterest.Add(finalPointOfInterest);
 
+            // Return a 201 when things go correctly. We use "CreatedAtRoute from the controllerbase.
+            // The GetPointOfInterestRoute template needs a cityId and the id of our point of interest.
             return CreatedAtRoute("GetPointOfInterest",
                  new
                  {
