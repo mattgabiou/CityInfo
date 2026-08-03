@@ -10,21 +10,19 @@ namespace CityInfo.API.Controllers
     public class PointsOfInterestController : ControllerBase
     {
         private readonly ILogger<PointsOfInterestController> _logger;
-        //private readonly IMailService _mailService;
         private readonly CitiesDataStore _citiesDataStore;
 
         public PointsOfInterestController(ILogger<PointsOfInterestController> logger,
-            //IMailService mailService, 
             CitiesDataStore citiesDataStore)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            //_mailService = mailService ?? throw new ArgumentNullException(nameof(mailService));
             _citiesDataStore = citiesDataStore ?? throw new ArgumentNullException(nameof(citiesDataStore));
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<PointOfInterestDto>> GetPointsOfInterest(int cityId)
-        {  
+        {
+            throw new Exception("Exception sample");
             try
             {               
                 var city = _citiesDataStore.Cities.FirstOrDefault(c => c.Id == cityId);
@@ -118,7 +116,8 @@ namespace CityInfo.API.Controllers
             }
 
             // find point of interest
-            var pointOfInterestFromStore = city.PointsOfInterest.FirstOrDefault(c => c.Id == pointOfInterestId);
+            var pointOfInterestFromStore = city.PointsOfInterest
+                .FirstOrDefault(c => c.Id == pointOfInterestId);
             if (pointOfInterestFromStore == null)
             {
                 return NotFound();
@@ -211,5 +210,6 @@ namespace CityInfo.API.Controllers
             city.PointsOfInterest.Remove(pointOfInterestFromStore);
             return NoContent();
         }
+
     }
 }
