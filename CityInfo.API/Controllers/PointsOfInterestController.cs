@@ -52,7 +52,7 @@ namespace CityInfo.API.Controllers
         public ActionResult<PointOfInterestDto> GetPointOfInterest(
             int cityId, int pointOfInterestId)
         {
-            var city = CitiesDataStore.Current.Cities
+            var city = _citiesDataStore.Cities
                 .FirstOrDefault(c => c.Id == cityId);
             if (city == null)
             {
@@ -75,7 +75,7 @@ namespace CityInfo.API.Controllers
            int cityId,
            PointOfInterestForCreationDto pointOfInterest)
         { 
-            var city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
+            var city = _citiesDataStore.Cities.FirstOrDefault(c => c.Id == cityId);
             if (city == null)
             {
                 return NotFound();
@@ -83,7 +83,7 @@ namespace CityInfo.API.Controllers
 
             // demo purposes - to be improved
             // Calculate the hightest id of all points of interest and add 1 to it
-            var maxPointOfInterestId = CitiesDataStore.Current.Cities.SelectMany(
+            var maxPointOfInterestId = _citiesDataStore.Cities.SelectMany(
                              c => c.PointsOfInterest).Max(p => p.Id);
 
             var finalPointOfInterest = new PointOfInterestDto()
@@ -112,7 +112,8 @@ namespace CityInfo.API.Controllers
             PointOfInterestForUpdateDto pointOfInterest)
         {
             // We check to see if we can find the point of interest to update. If not, we return not found
-            var city = CitiesDataStore.Current.Cities.FirstOrDefault(c => c.Id == cityId);
+            var city = _citiesDataStore.Cities
+                .FirstOrDefault(c => c.Id == cityId);
             if (city == null)
             {
                 return NotFound();
@@ -139,7 +140,7 @@ namespace CityInfo.API.Controllers
             JsonPatchDocument<PointOfInterestForUpdateDto> patchDocument)
         {
             // Check the city
-            var city = CitiesDataStore.Current.Cities
+            var city = _citiesDataStore.Cities
                 .FirstOrDefault(c => c.Id == cityId);
             if (city == null)
             {
@@ -165,8 +166,6 @@ namespace CityInfo.API.Controllers
                        Description = pointOfInterestFromStore.Description
                    };
 
-
-            
             // Apply the patch document. But what if something is wrong with the patch document
             // If the consumer made a mistake we need to sent back a Bad Request. We need to check the model state
             patchDocument.ApplyTo(pointOfInterestToPatch, ModelState);
@@ -194,7 +193,7 @@ namespace CityInfo.API.Controllers
         public ActionResult Delete(int cityId, int pointOfInterestId)
         {
             // Check the city
-            var city = CitiesDataStore.Current.Cities
+            var city = _citiesDataStore.Cities
                 .FirstOrDefault(c => c.Id == cityId);
             if (city == null)
             {
