@@ -1,6 +1,5 @@
 ﻿using CityInfo.API.Models;
 using CityInfo.API.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -190,7 +189,7 @@ namespace CityInfo.API.Controllers
         }
 
         [HttpDelete("{pointOfInterestId}")]
-        public ActionResult Delete(int cityId, int pointOfInterestId)
+        public ActionResult DeletePointOfInterest(int cityId, int pointOfInterestId)
         {
             // Check the city
             var city = _citiesDataStore.Cities
